@@ -15,4 +15,12 @@ export default defineConfig({
             ignored: ['**/storage/framework/views/**'],
         },
     },
+    // vite.config.js
+    export default {
+        server: {
+            host: '127.0.0.1',
+            port: 5173 // 必要であればポートも固定
+        }
+    }
+
 });
