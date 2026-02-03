@@ -47,13 +47,17 @@ class TaskService
 
     /**タスクの削除--------------------------------------------------
      * @param Task $task 削除対象のタスク
+     * @@aram User $user 実行するユーザー
      * @return void
      */
 
-    public function deleteTasks(Task $task): void
+    public function deleteTasks(Task $task, User $user): void
     {
 
-        //ポリシー作成後に権限確認を入れる
+        //ポリシーで権限確認
+        if ($user->cannot('delete', $task)) {
+            abort(403);
+        }
 
 
         $task->delete();
