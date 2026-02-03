@@ -51,15 +51,8 @@ class TaskService
      * @return void
      */
 
-    public function deleteTasks(Task $task, User $user): void
+    public function deleteTasks(Task $task): void
     {
-
-        //ポリシーで権限確認
-        if ($user->cannot('delete', $task)) {
-            abort(403);
-        }
-
-
         $task->delete();
     }
 }
