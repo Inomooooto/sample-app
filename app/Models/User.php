@@ -48,7 +48,7 @@ class User extends Authenticatable
     }
 
     //タスクのリレーションを追加
-    public function Task(): HasMany
+    public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
     }
