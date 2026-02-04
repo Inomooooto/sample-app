@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Services\TaskService;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 
 /**タスクのCRUD処理のためのコントローラーです。
  * タスクの一覧取得、作成、更新、削除を行います。
@@ -23,14 +26,13 @@ class TaskController extends Controller
 
     /**
      * タスク一覧画面を取得----------------------------------------------
-     * @param Request $request リクエストパラメータ
      * @return Response inertiaのレスポンス
      */
 
     public function index(): Response
     {
         //TaskServiceからタスクの取得
-        $user = auth()->user();
+        $user = Auth::user();
         $tasks = $this->taskService->getUserTasks($user);
 
         return Inertia::render('Tasks/Index', [
@@ -43,13 +45,13 @@ class TaskController extends Controller
      * @return RedirectResponse
      */
 
-    public function store(StoreTaskRequest $request)
+    public function store(StoreTaskRequest $request): RedirectResponse
     {
         //バリデーション済みデータを取得
         $validated = $request->validated();
 
         //認証済みユーザーの取得
-        $user = auth()->user();
+        $user = Auth::user();
 
         //serviceクラスのメソッドで新規作成
         $this->taskService->createTasks($user, $validated);
@@ -69,10 +71,10 @@ class TaskController extends Controller
     public function update(UpdateTaskRequest $request, Task $task)
     {
         //バリデーション済みデータを取得
-        $validated = $requet->validate();
+        $validated = $request->validate();
 
         //認証済みユーザーの取得
-        $user = auth()->user();
+        $user = Auth::user();
 
         //taskServiceのメソッドで更新
         $this->taskService->updateTask($task, $validated);
@@ -93,7 +95,7 @@ class TaskController extends Controller
         $this->authorize('delete', $task);
 
         //taskServiceのメソッドで削除
-        $this->taskService->deleteTasks($tasks);
+        $this->taskService->deleteTasks($task);
 
         return redirect()->route('tasks.index')
             ->with('success', 'タスクを削除しました');
