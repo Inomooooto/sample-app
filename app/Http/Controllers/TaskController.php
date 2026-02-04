@@ -10,7 +10,6 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 
 /**タスクのCRUD処理のためのコントローラーです。
