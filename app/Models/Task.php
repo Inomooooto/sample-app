@@ -9,8 +9,7 @@ class Task extends Model
 {
     //マスアサインメント可能なカラム
     protected $fillable = [
-        //ユーザーを実装したらコメントアウトはずす
-        //'user_id',
+        'user_id',
         'title',
         'description',
         'due_date',
