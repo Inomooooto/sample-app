@@ -16,5 +16,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+//タスク関連のルートを追加
+Route::middleware('auth')->group(function () {
+    Route::resource('tasks', TaskController::class);
+});
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
