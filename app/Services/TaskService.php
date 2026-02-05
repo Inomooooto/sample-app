@@ -18,9 +18,10 @@ class TaskService
      * @param User $user タスクを所持しているユーザー
      */
 
-    public function getUserTasks(User $user): Collection
+    public function getUserTasks(User $user)
     {
-        return $user->tasks()->orderBy('due_date', 'asc')->get();
+        $tasks = $user->tasks()->orderBy('due_date', 'asc')->get();
+        return $tasks;
     }
 
 
