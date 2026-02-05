@@ -27,7 +27,12 @@ Route::middleware('auth')->group(function () {
 
 //タスク関連のルートを追加
 Route::middleware('auth')->group(function () {
-    Route::resource('tasks', TaskController::class);
+    //{index, create, store, show, edit, update, destroy}
+    Route::resource('tasks', TaskController::class)
+        ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 });
+// タスク完了ルート
+Route::patch('tasks/{task}/complete', [TaskController::class, 'complete'])
+    ->name('tasks.complete');
 
 require __DIR__ . '/auth.php';
