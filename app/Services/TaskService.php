@@ -21,7 +21,16 @@ class TaskService
     public function getUserTasks(User $user)
     {
         $tasks = $user->tasks()->orderBy('due_date', 'asc')->get();
-        return $tasks;
+
+        //ステータスごとにグルーピングする
+        return [
+            'pending' => $tasks->where('status', 'pending')->values(),
+            'in_progress' => $tasks->where('status', 'in_progress')->values(),
+            'completed' => $tasks->where('status', 'completed')->values(),
+            'overdue' => $tasks->where('status', '!=', 'completed')
+                ->where('due_date', '>', 'now()')->values(),
+            'all' => $tasks,
+        ];
     }
 
 
