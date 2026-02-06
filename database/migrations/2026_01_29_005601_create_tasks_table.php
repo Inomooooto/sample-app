@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->timestamp('due_date')->nullable();
-            $table->enum('status', ['pending', 'in_progress', 'high'])->nullable();
+            $table->enum('status', ['pending', 'in_progress', 'completed'])->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->timestamp('deleted_at')->nullable();
 
