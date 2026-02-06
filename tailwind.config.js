@@ -17,6 +17,11 @@ export default {
             },
         },
     },
+    plugins: [
+        require('daisyui'),
+    ],
 
-    plugins: [forms],
+    daisyui: {
+        themes: ["bumblebee"],
+    },
 };
