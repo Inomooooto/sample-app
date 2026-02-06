@@ -12,6 +12,7 @@ class TaskSeeder extends Seeder
      */
     public function run(): void
     {
+        //未着手のタスク
         Task::create([
             'user_id' => '1',
             'title' => 'laravelのシーダー作成方法についてベストプラクティスを学ぶ',
@@ -47,6 +48,29 @@ class TaskSeeder extends Seeder
             'completed_at' => null,
             'deleted_at' => null,
 
+        ]);
+
+        //進行中のタスク
+        Task::create([
+            'user_id' => '1',
+            'title' => '毎日スクワットを30回する',
+            'description' => '筋トレは継続が大事',
+            'due_date' => now()->addDays(7), //７日後を期限にする
+            'status' => 'in_progress',
+            'completed_at' => null,
+            'deleted_at' => null,
+        ]);
+
+        //期限切れのタスク
+        Task::create([
+            'user_id' => '1',
+            'title' => '５キロダイエットする',
+            'description' => '2026年は体型管理と体調管理に気を付けたいので、
+            無理なくダイエットを頑張りたい。',
+            'due_date' => now()->subDays(3), //3日前
+            'status' => 'in_progress',
+            'completed_at' => null,
+            'deleted_at' => null,
         ]);
     }
 }
