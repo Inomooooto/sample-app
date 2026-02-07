@@ -32,10 +32,38 @@ class TaskController extends Controller
     {
         //TaskServiceからタスクの取得
         $user = Auth::user();
+
         $tasks = $this->taskService->getUserTasks($user);
+
+        // dd($tasks);
+
 
         return Inertia::render('Tasks/Index', [
             'tasks' => $tasks
+        ]);
+    }
+
+    /**
+     * タスク作成画面を表示
+     * @return Response
+     */
+    public function create(): Response
+    {
+        return Inertia::render('Tasks/Create');
+    }
+
+    /**
+     * タスク編集画面を表示
+     * @param Task $task
+     * @return Response
+     */
+    public function edit(Task $task): Response
+    {
+        //ポリシーで認可チェック
+        $this->authorize('update', $task);
+
+        return Inertia::render('Tasks/Edit', [
+            'task' => $task
         ]);
     }
 
@@ -98,5 +126,49 @@ class TaskController extends Controller
 
         return redirect()->route('tasks.index')
             ->with('success', 'タスクを削除しました');
+    }
+
+    //追加メソッド
+    /**タスク完了時のEXPを追加
+     * @param Task $task 完了したタスク
+     * @return RedirectResponse
+     */
+    public function complete(Task $task):RedirectResponse
+    {
+        //ポリシーで認可チェック
+        $this->authorize('update', $task);
+
+        //タスクのステータスを更新
+        $task->update([
+            'status' => 'completed',
+            'completed_at' => now(),
+        ]);
+
+        //経験値の計算（exp_rewardが設定されていない場合は難易度から計算）
+        $expReward = $task->exp_reward > 0
+            ? $task->exp_reward
+            : $task->calculateExpReward();
+
+        //ユーザの取得
+        $user = Auth::user();
+
+        //レベルアップ前のレベルを記録
+        $oldLevel = $user->level;
+
+        //経験値付与（レベルアップ処理も含む）
+        $user->addExp($expReward);
+
+        //レベルアップしたかどうかを判定
+        $leveledUp = $user->level > $oldLevel;
+
+        //リダイレクト
+        return redirect()->route('tasks.index')
+        ->with([
+            'success' => 'クエストを達成しました！',
+            'exp_gained' => $expReward,
+            'leveled_up' => $leveledUp,
+            'new_level' => $leveledUp ? $user->level : null,
+        ]);
+
     }
 }

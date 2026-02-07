@@ -19,6 +19,13 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+
+            //ここから追加
+            $table->integer('level')->default(1);
+            $table->integer('current_exp')->default(0);
+            $table->integer('total_exp')->default(0);
+            $table->integer('streak_days')->default(0);
+            $table->date('last_login_date')->nullable();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

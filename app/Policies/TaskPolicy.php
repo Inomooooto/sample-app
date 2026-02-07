@@ -9,6 +9,14 @@ use Illuminate\Auth\Access\Response;
 class TaskPolicy
 {
     /**
+     * タスクを更新できるユーザーか判定
+     */
+    public function update(User $user, Task $task): bool
+    {
+        return $user->id === $task->user_id;
+    }
+
+    /**
      * タスクを削除できるユーザーか判定
      */
     public function delete(User $user, Task $task): bool

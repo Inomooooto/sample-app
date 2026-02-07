@@ -7,12 +7,10 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    if (auth()->check()) {
+        return redirect()->route('tasks.index');
+    }
+    return redirect()->route('login');
 });
 
 Route::get('/dashboard', function () {
@@ -30,9 +28,10 @@ Route::middleware('auth')->group(function () {
     //{index, create, store, show, edit, update, destroy}
     Route::resource('tasks', TaskController::class)
         ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+
+    // タスク完了ルート
+    Route::patch('tasks/{task}/complete', [TaskController::class, 'complete'])
+        ->name('tasks.complete');
 });
-// タスク完了ルート
-Route::patch('tasks/{task}/complete', [TaskController::class, 'complete'])
-    ->name('tasks.complete');
 
 require __DIR__ . '/auth.php';

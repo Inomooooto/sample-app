@@ -23,6 +23,10 @@ return new class extends Migration
             $table->timestamp('completed_at')->nullable();
             $table->timestamp('deleted_at')->nullable();
 
+            //追加
+            $table->enum('difficulty', ['E','D','C','B','A','S'])->default('D');
+            $table->integer('exp_reward')->default(0);
+
             $table->timestamps();
         });
     }
